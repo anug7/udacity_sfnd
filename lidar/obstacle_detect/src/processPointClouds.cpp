@@ -27,7 +27,8 @@ typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::FilterCloud(ty
     // Time segmentation process
     auto startTime = std::chrono::steady_clock::now();
     typename pcl::PointCloud<PointT>::Ptr filteredCloud(new pcl::PointCloud<PointT>()), 
-                                          filteredRegion(new pcl::PointCloud<PointT>());
+                                          filteredRegion(new pcl::PointCloud<PointT>()),
+                                          filteredOut(new pcl::PointCloud<PointT>());
     
     pcl::VoxelGrid<PointT> sor;
     sor.setInputCloud (cloud);
@@ -40,10 +41,28 @@ typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::FilterCloud(ty
     cbox.setInputCloud(filteredCloud);
     cbox.filter(*filteredRegion);
 
+    //Remove roof points from point cloud
+    pcl::ExtractIndices<PointT> extract;
+    pcl::CropBox<PointT> roofBox;
+    roofBox.setMin({-1.5, -1.7, -1, 1});
+    roofBox.setMax({2.6, 1.7, -0.4, 1});
+    roofBox.setInputCloud(filteredRegion);
+    std::vector<int> rIndices;
+    roofBox.filter(rIndices);
+
+    pcl::PointIndices::Ptr inliers {new pcl::PointIndices};
+    for (int i: rIndices)
+        inliers->indices.push_back(i);
+
+    extract.setInputCloud(filteredRegion);
+    extract.setIndices (inliers);
+    extract.setNegative(true);
+    extract.filter(*filteredOut);
+
     auto endTime = std::chrono::steady_clock::now();
     auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
     std::cout << "filtering took " << elapsedTime.count() << " milliseconds" << std::endl;
-    return filteredRegion;
+    return filteredOut;
 
 }
 
@@ -91,7 +110,6 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
     {
       PCL_ERROR ("Could not estimate a planar model for the given dataset.");
     }
-    std::cout << inliers->indices.size() << "\n";
 
     auto endTime = std::chrono::steady_clock::now();
     auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
@@ -164,6 +182,113 @@ Box ProcessPointClouds<PointT>::BoundingBox(typename pcl::PointCloud<PointT>::Pt
     return box;
 }
 
+
+/*Take from : https://codextechnicanum.blogspot.com/2015/04/find-minimum-oriented-bounding-box-of.html
+  */
+template<typename PointT>
+BoxQ ProcessPointClouds<PointT>::BoundingBoxQ(typename pcl::PointCloud<PointT>::Ptr cluster)
+{
+
+    // Find bounding box for one of the clusters
+    Eigen::Vector4f cen({0., 0, 0, 0});
+    pcl::compute3DCentroid(*cluster, cen);
+    Eigen::Matrix3f covariance;
+
+    pcl::computeCovarianceMatrixNormalized(*cluster, cen, covariance);
+    Eigen::SelfAdjointEigenSolver<Eigen::Matrix3f> eigen_solver(covariance, Eigen::ComputeEigenvectors);
+    Eigen::Matrix3f eigenVecPCA = eigen_solver.eigenvectors();
+    // This line is necessary for proper orientation in some cases. The numbers come out the same without it, bu
+    // the signs are different and the box doesn't get correctly oriented in some cases
+    eigenVecPCA.col(2) = eigenVecPCA.col(0).cross(eigenVecPCA.col(1));
+
+    //Transform points to eigen space to get min and max of bounding box
+    Eigen::Matrix4f projectionTransform(Eigen::Matrix4f::Identity());
+    projectionTransform.block<3,3>(0,0) = eigenVecPCA.transpose();
+    projectionTransform.block<3,1>(0,3) = -1.f * (projectionTransform.block<3,3>(0,0) * cen.head<3>());
+    typename pcl::PointCloud<PointT>::Ptr cloudPointsProjected (new pcl::PointCloud<PointT>);
+    pcl::transformPointCloud(*cluster, *cloudPointsProjected, projectionTransform);
+
+    PointT minPoint, maxPoint;
+    pcl::getMinMax3D(*cloudPointsProjected, minPoint, maxPoint);
+    const Eigen::Vector3f meanDiagonal = 0.5f*(maxPoint.getVector3fMap() + minPoint.getVector3fMap());
+
+    const Eigen::Quaternionf bboxQuaternion(eigenVecPCA); //Quaternions are a way to do rotations https://www.youtube.com/watch?v=mHVwd8gYLnI
+    const Eigen::Vector3f bboxTransform = eigenVecPCA * meanDiagonal + cen.head<3>();
+
+    BoxQ boxq;
+    boxq.bboxQuaternion = bboxQuaternion;
+    boxq.bboxTransform = bboxTransform;
+    boxq.cube_length = maxPoint.x - minPoint.x;
+    boxq.cube_width = maxPoint.y - minPoint.y;
+    boxq.cube_height = maxPoint.z - minPoint.z;
+    
+    return boxq;
+}
+
+/*
+ * Exercise Functions
+ */
+template<typename PointT>
+std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::RansacPlane(typename pcl::PointCloud<PointT>::Ptr cloud, int maxIterations, float distanceTol)
+{
+  auto startTime = std::chrono::steady_clock::now();
+	
+  std::unordered_set<int> inliersResult;
+	srand(time(NULL));
+	
+  int maxIdx = cloud->size();
+  int maxInliers = 0;
+  int curInliers = 0;
+  for (int i = 0; i < maxIterations; i++){
+    std::unordered_set<int> tmp;
+    while (tmp.size() < 3){
+        tmp.insert(rand() % maxIdx);
+    }
+    auto itr = tmp.begin();
+    PointT p1 = cloud->at(*(itr++)),
+                  p2 = cloud->at(*(itr++)),
+                  p3 = cloud->at(*(itr));
+    double a = ((p2.y - p1.y) * (p3.z - p1.z)) - ((p2.z - p1.z) * (p3.y - p1.y)),
+           b = ((p2.z - p1.z) * (p3.x - p1.x)) - ((p2.x - p1.x) * (p3.z - p1.z)),
+           c = ((p2.x - p1.x) * (p3.y - p1.y)) - ((p2.y - p1.y) * (p3.x - p1.x)),
+           d = -1 * (a * p1.x + b * p1.y + c * p1.z);
+    double sqrtab = sqrt(a*a + b*b + c*c);
+    curInliers = 0;
+    for(int j = 0; j < maxIdx; j++){
+      if (tmp.find(j) != tmp.end())
+        continue;
+      PointT p = cloud->at(j);
+      double dist = fabs(a * p.x + b * p.y + c * p.z + d) / sqrtab;
+      if (dist <= distanceTol){
+        curInliers++;
+        tmp.insert(j);
+      }
+    }
+    if(curInliers > maxInliers){
+      maxInliers = curInliers;
+      inliersResult = tmp;
+    }
+
+  }
+  auto endTime = std::chrono::steady_clock::now();
+  auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
+  std::cout << "plane segmentation took " << elapsedTime.count() << " milliseconds" << std::endl;
+  
+  typename pcl::PointCloud<PointT>::Ptr plane (new pcl::PointCloud<PointT>()),
+                          obst(new pcl::PointCloud<PointT>());
+	
+  std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> segResult(obst, plane);
+  for(int index = 0; index < cloud->points.size(); index++)
+	{
+		PointT point = cloud->points[index];
+		if(inliersResult.count(index))
+			segResult.second->points.push_back(point);
+		else
+			segResult.first->points.push_back(point);
+	}
+
+  return segResult;
+}
 
 template<typename PointT>
 void ProcessPointClouds<PointT>::savePcd(typename pcl::PointCloud<PointT>::Ptr cloud, std::string file)

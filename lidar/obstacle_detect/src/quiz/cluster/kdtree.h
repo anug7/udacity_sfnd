@@ -20,9 +20,10 @@ struct Node
 struct KdTree
 {
 	Node* root;
+  int dim;
 
-	KdTree()
-	: root(NULL)
+	KdTree(int _dim)
+	: root(NULL), dim(_dim)
 	{}
 
   void insertHelper(Node **ref, std::vector<float> points, int id, int depth){
@@ -30,7 +31,7 @@ struct KdTree
     if(*ref == nullptr){
       *ref = new Node(points, id);
     }else{
-      int sIdx = depth % 2;
+      int sIdx = depth % dim;
       if(points[sIdx] < (*ref)->point[sIdx]){
         insertHelper(&((*ref)->left), points, id, depth + 1);
       }else{
@@ -52,7 +53,7 @@ struct KdTree
           ids.push_back(ref->id);
         }
       }
-      int sIdx = depth % 2;
+      int sIdx = depth % dim;
       if(target[sIdx] - distanceTol < ref->point[sIdx])
         searchHelper(ref->left, ids, target, distanceTol, depth + 1);
       if(target[sIdx] + distanceTol > ref->point[sIdx])
@@ -75,7 +76,3 @@ struct KdTree
 	
 
 };
-
-
-
-

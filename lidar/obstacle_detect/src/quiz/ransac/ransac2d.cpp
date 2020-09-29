@@ -104,7 +104,8 @@ std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int ma
 
 }
 
-std::unordered_set<int> RansacPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int maxIterations, float distanceTol)
+template<typename PointT>
+std::unordered_set<int> RansacPlane(typename pcl::PointCloud<PointT>::Ptr cloud, int maxIterations, float distanceTol)
 {
 	std::unordered_set<int> inliersResult;
 	srand(time(NULL));
@@ -118,7 +119,7 @@ std::unordered_set<int> RansacPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, i
         tmp.insert(rand() % maxIdx);
     }
     auto itr = tmp.begin();
-    pcl::PointXYZ p1 = cloud->at(*(itr++)),
+    PointT p1 = cloud->at(*(itr++)),
                   p2 = cloud->at(*(itr++)),
                   p3 = cloud->at(*(itr));
     double a = ((p2.y - p1.y) * (p3.z - p1.z)) - ((p2.z - p1.z) * (p3.y - p1.y)),
@@ -130,7 +131,7 @@ std::unordered_set<int> RansacPlane(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, i
     for(int j = 0; j < maxIdx; j++){
       if (tmp.find(j) != tmp.end())
         continue;
-      pcl::PointXYZ p = cloud->at(j);
+      PointT p = cloud->at(j);
       double dist = fabs(a * p.x + b * p.y + c * p.z + d) / sqrtab;
       if (dist <= distanceTol){
         curInliers++;
@@ -163,7 +164,7 @@ int main ()
 
 	//std::unordered_set<int> inliers = Ransac(cloud, 50, 0.2);
   auto startTime = std::chrono::steady_clock::now();
-	std::unordered_set<int> inliers = RansacPlane(cloud, 100, 0.5);
+	std::unordered_set<int> inliers = RansacPlane<pcl::PointXYZ>(cloud, 100, 0.5);
   auto endTime = std::chrono::steady_clock::now();
   auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
   std::cout << "plane segmentation took " << elapsedTime.count() << " milliseconds" << std::endl;
