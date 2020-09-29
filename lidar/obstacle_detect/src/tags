@@ -1,0 +1,115 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+BOX_H	render/box.h	2;"	d
+BoundingBox	processPointClouds.cpp	/^Box ProcessPointClouds<PointT>::BoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster)$/;"	f	class:ProcessPointClouds
+Box	render/box.h	/^struct Box$/;"	s
+BoxQ	render/box.h	/^struct BoxQ$/;"	s
+CameraAngle	render/render.h	/^enum CameraAngle$/;"	g
+Car	render/render.h	/^  	Car(Vect3 setPosition, Vect3 setDimensions, Color setColor, std::string setName)$/;"	f	struct:Car
+Car	render/render.h	/^struct Car$/;"	s
+Clustering	processPointClouds.cpp	/^std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::Clustering(typename pcl::PointCloud<PointT>::Ptr cloud, float clusterTolerance, int minSize, int maxSize)$/;"	f	class:ProcessPointClouds
+Color	render/render.h	/^	Color(float setR, float setG, float setB)$/;"	f	struct:Color
+Color	render/render.h	/^struct Color$/;"	s
+CreateData	quiz/cluster/cluster.cpp	/^pcl::PointCloud<pcl::PointXYZ>::Ptr CreateData(std::vector<std::vector<float>> points)$/;"	f
+CreateData	quiz/ransac/ransac2d.cpp	/^pcl::PointCloud<pcl::PointXYZ>::Ptr CreateData()$/;"	f
+CreateData3D	quiz/ransac/ransac2d.cpp	/^pcl::PointCloud<pcl::PointXYZ>::Ptr CreateData3D()$/;"	f
+FPS	render/render.h	/^	XY, TopDown, Side, FPS$/;"	e	enum:CameraAngle
+FilterCloud	processPointClouds.cpp	/^typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::FilterCloud(typename pcl::PointCloud<PointT>::Ptr cloud, float filterRes, Eigen::Vector4f minPoint, Eigen::Vector4f maxPoint)$/;"	f	class:ProcessPointClouds
+KdTree	quiz/cluster/kdtree.h	/^	KdTree()$/;"	f	struct:KdTree
+KdTree	quiz/cluster/kdtree.h	/^struct KdTree$/;"	s
+LIDAR_H	sensors/lidar.h	2;"	d
+Lidar	sensors/lidar.h	/^	Lidar(std::vector<Car> setCars, double setGroundSlope)$/;"	f	struct:Lidar
+Lidar	sensors/lidar.h	/^struct Lidar$/;"	s
+Node	quiz/cluster/kdtree.h	/^	Node(std::vector<float> arr, int setId)$/;"	f	struct:Node
+Node	quiz/cluster/kdtree.h	/^struct Node$/;"	s
+PROCESSPOINTCLOUDS_H_	processPointClouds.h	4;"	d
+ProcessPointClouds	processPointClouds.cpp	/^ProcessPointClouds<PointT>::ProcessPointClouds() {}$/;"	f	class:ProcessPointClouds
+ProcessPointClouds	processPointClouds.h	/^class ProcessPointClouds {$/;"	c
+RENDER_H	render/render.h	6;"	d
+Ransac	quiz/ransac/ransac2d.cpp	/^std::unordered_set<int> Ransac(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, int maxIterations, float distanceTol)$/;"	f
+Ray	sensors/lidar.h	/^	Ray(Vect3 setOrigin, double horizontalAngle, double verticalAngle, double setResolution)$/;"	f	struct:Ray
+Ray	sensors/lidar.h	/^struct Ray$/;"	s
+SegmentPlane	processPointClouds.cpp	/^std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::SegmentPlane(typename pcl::PointCloud<PointT>::Ptr cloud, int maxIterations, float distanceThreshold)$/;"	f	class:ProcessPointClouds
+SeparateClouds	processPointClouds.cpp	/^std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::SeparateClouds(pcl::PointIndices::Ptr inliers, typename pcl::PointCloud<PointT>::Ptr cloud) $/;"	f	class:ProcessPointClouds
+Side	render/render.h	/^	XY, TopDown, Side, FPS$/;"	e	enum:CameraAngle
+TopDown	render/render.h	/^	XY, TopDown, Side, FPS$/;"	e	enum:CameraAngle
+Vect3	render/render.h	/^	Vect3(double setX, double setY, double setZ)$/;"	f	struct:Vect3
+Vect3	render/render.h	/^struct Vect3$/;"	s
+XY	render/render.h	/^	XY, TopDown, Side, FPS$/;"	e	enum:CameraAngle
+b	render/render.h	/^	float r, g, b;$/;"	m	struct:Color
+bboxQuaternion	render/box.h	/^	Eigen::Quaternionf bboxQuaternion;$/;"	m	struct:BoxQ
+bboxTransform	render/box.h	/^	Eigen::Vector3f bboxTransform;$/;"	m	struct:BoxQ
+cars	sensors/lidar.h	/^	std::vector<Car> cars;$/;"	m	struct:Lidar
+castDistance	sensors/lidar.h	/^	double castDistance;$/;"	m	struct:Ray
+castPosition	sensors/lidar.h	/^	Vect3 castPosition;$/;"	m	struct:Ray
+checkCollision	render/render.h	/^	bool checkCollision(Vect3 point)$/;"	f	struct:Car
+clearRays	render/render.cpp	/^void clearRays(pcl::visualization::PCLVisualizer::Ptr& viewer)$/;"	f
+cloud	sensors/lidar.h	/^	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud;$/;"	m	struct:Lidar
+color	render/render.h	/^  	Color color;$/;"	m	struct:Car
+countRays	render/render.cpp	/^int countRays = 0;$/;"	v
+cube_height	render/box.h	/^    float cube_height;$/;"	m	struct:BoxQ
+cube_length	render/box.h	/^	float cube_length;$/;"	m	struct:BoxQ
+cube_width	render/box.h	/^    float cube_width;$/;"	m	struct:BoxQ
+dimensions	render/render.h	/^  	Vect3 position, dimensions;$/;"	m	struct:Car
+direction	sensors/lidar.h	/^	Vect3 direction;$/;"	m	struct:Ray
+euclideanCluster	quiz/cluster/cluster.cpp	/^std::vector<std::vector<int>> euclideanCluster(const std::vector<std::vector<float>>& points, KdTree* tree, float distanceTol)$/;"	f
+g	render/render.h	/^	float r, g, b;$/;"	m	struct:Color
+groundSlope	sensors/lidar.h	/^	double groundSlope;$/;"	m	struct:Lidar
+id	quiz/cluster/kdtree.h	/^	int id;$/;"	m	struct:Node
+inbetween	render/render.h	/^	bool inbetween(double point, double center, double range)$/;"	f	struct:Car
+initCamera	environment.cpp	/^void initCamera(CameraAngle setAngle, pcl::visualization::PCLVisualizer::Ptr& viewer)$/;"	f
+initHighway	environment.cpp	/^std::vector<Car> initHighway(bool renderScene, pcl::visualization::PCLVisualizer::Ptr& viewer)$/;"	f
+initScene	quiz/cluster/cluster.cpp	/^pcl::visualization::PCLVisualizer::Ptr initScene(Box window, int zoom)$/;"	f
+initScene	quiz/ransac/ransac2d.cpp	/^pcl::visualization::PCLVisualizer::Ptr initScene()$/;"	f
+insert	quiz/cluster/kdtree.h	/^	void insert(std::vector<float> point, int id)$/;"	f	struct:KdTree
+left	quiz/cluster/kdtree.h	/^	Node* left;$/;"	m	struct:Node
+loadPcd	processPointClouds.cpp	/^typename pcl::PointCloud<PointT>::Ptr ProcessPointClouds<PointT>::loadPcd(std::string file)$/;"	f	class:ProcessPointClouds
+main	environment.cpp	/^int main (int argc, char** argv)$/;"	f
+main	quiz/cluster/cluster.cpp	/^int main ()$/;"	f
+main	quiz/ransac/ransac2d.cpp	/^int main ()$/;"	f
+maxDistance	sensors/lidar.h	/^	double maxDistance;$/;"	m	struct:Lidar
+minDistance	sensors/lidar.h	/^	double minDistance;$/;"	m	struct:Lidar
+name	render/render.h	/^  	std::string name;$/;"	m	struct:Car
+numPoints	processPointClouds.cpp	/^void ProcessPointClouds<PointT>::numPoints(typename pcl::PointCloud<PointT>::Ptr cloud)$/;"	f	class:ProcessPointClouds
+operator +	render/render.h	/^	Vect3 operator+(const Vect3& vec)$/;"	f	struct:Vect3
+origin	sensors/lidar.h	/^	Vect3 origin;$/;"	m	struct:Ray
+pi	sensors/lidar.h	/^const double pi = 3.1415;$/;"	v
+point	quiz/cluster/kdtree.h	/^	std::vector<float> point;$/;"	m	struct:Node
+position	render/render.h	/^  	Vect3 position, dimensions;$/;"	m	struct:Car
+position	sensors/lidar.h	/^	Vect3 position;$/;"	m	struct:Lidar
+r	render/render.h	/^	float r, g, b;$/;"	m	struct:Color
+rayCast	sensors/lidar.h	/^	void rayCast(const std::vector<Car>& cars, double minDistance, double maxDistance, pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, double slopeAngle, double sderr)$/;"	f	struct:Ray
+rays	sensors/lidar.h	/^	std::vector<Ray> rays;$/;"	m	struct:Lidar
+render	render/render.h	/^  	void render(pcl::visualization::PCLVisualizer::Ptr& viewer)$/;"	f	struct:Car
+render2DTree	quiz/cluster/cluster.cpp	/^void render2DTree(Node* node, pcl::visualization::PCLVisualizer::Ptr& viewer, Box window, int& iteration, uint depth=0)$/;"	f
+renderBox	render/render.cpp	/^void renderBox(pcl::visualization::PCLVisualizer::Ptr& viewer, Box box, int id, Color color, float opacity)$/;"	f
+renderBox	render/render.cpp	/^void renderBox(pcl::visualization::PCLVisualizer::Ptr& viewer, BoxQ box, int id, Color color, float opacity)$/;"	f
+renderHighway	render/render.cpp	/^void renderHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)$/;"	f
+renderPointCloud	render/render.cpp	/^void renderPointCloud(pcl::visualization::PCLVisualizer::Ptr& viewer, const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, std::string name, Color color)$/;"	f
+renderPointCloud	render/render.cpp	/^void renderPointCloud(pcl::visualization::PCLVisualizer::Ptr& viewer, const pcl::PointCloud<pcl::PointXYZI>::Ptr& cloud, std::string name, Color color)$/;"	f
+renderRays	render/render.cpp	/^void renderRays(pcl::visualization::PCLVisualizer::Ptr& viewer, const Vect3& origin, const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud)$/;"	f
+resolution	sensors/lidar.h	/^	double resolution;$/;"	m	struct:Ray
+resoultion	sensors/lidar.h	/^	double resoultion;$/;"	m	struct:Lidar
+right	quiz/cluster/kdtree.h	/^	Node* right;$/;"	m	struct:Node
+root	quiz/cluster/kdtree.h	/^	Node* root;$/;"	m	struct:KdTree
+savePcd	processPointClouds.cpp	/^void ProcessPointClouds<PointT>::savePcd(typename pcl::PointCloud<PointT>::Ptr cloud, std::string file)$/;"	f	class:ProcessPointClouds
+scan	sensors/lidar.h	/^	pcl::PointCloud<pcl::PointXYZ>::Ptr scan()$/;"	f	struct:Lidar
+sderr	sensors/lidar.h	/^	double sderr;$/;"	m	struct:Lidar
+search	quiz/cluster/kdtree.h	/^	std::vector<int> search(std::vector<float> target, float distanceTol)$/;"	f	struct:KdTree
+simpleHighway	environment.cpp	/^void simpleHighway(pcl::visualization::PCLVisualizer::Ptr& viewer)$/;"	f
+streamPcd	processPointClouds.cpp	/^std::vector<boost::filesystem::path> ProcessPointClouds<PointT>::streamPcd(std::string dataPath)$/;"	f	class:ProcessPointClouds
+x	render/render.h	/^	double x, y, z;$/;"	m	struct:Vect3
+x_max	render/box.h	/^	float x_max;$/;"	m	struct:Box
+x_min	render/box.h	/^	float x_min;$/;"	m	struct:Box
+y	render/render.h	/^	double x, y, z;$/;"	m	struct:Vect3
+y_max	render/box.h	/^	float y_max;$/;"	m	struct:Box
+y_min	render/box.h	/^	float y_min;$/;"	m	struct:Box
+z	render/render.h	/^	double x, y, z;$/;"	m	struct:Vect3
+z_max	render/box.h	/^	float z_max;$/;"	m	struct:Box
+z_min	render/box.h	/^	float z_min;$/;"	m	struct:Box
+~Lidar	sensors/lidar.h	/^	~Lidar()$/;"	f	struct:Lidar
+~ProcessPointClouds	processPointClouds.cpp	/^ProcessPointClouds<PointT>::~ProcessPointClouds() {}$/;"	f	class:ProcessPointClouds
