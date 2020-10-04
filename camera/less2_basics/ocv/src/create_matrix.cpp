@@ -16,6 +16,14 @@ void createMatrix1()
     // STUDENT TASK :
     // Create a variable of type cv::Mat* named m3_8u which has three channels with a
     // depth of 8bit per channel. Then, set the first channel to 255 and display the result.
+    cv::Mat *m1_8uc3(new cv::Mat(nrows, ncols, CV_8UC3));
+    for (int r = 0; r < nrows; r++){
+        for (int c = 0; c < ncols; c++){
+            m1_8uc3->data[r * ncols * 3 + c * 3] = 255;
+            m1_8uc3->data[r * ncols * 3 + c * 3 + 1] = 0;
+            m1_8uc3->data[r * ncols * 3 + c * 3 + 2] = 0;
+        }        
+    }
 
 
     // show result
@@ -26,6 +34,9 @@ void createMatrix1()
 
     // STUDENT TASK :
     // Display the results from the STUDENT TASK above
+    cv::namedWindow(windowName, 1); // create window
+    cv::imshow(windowName, *m1_8uc3);
+    cv::waitKey(0); // wait for keyboard input before continuing
 
 }
 

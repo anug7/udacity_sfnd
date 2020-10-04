@@ -19,10 +19,11 @@ void gaussianSmoothing1()
                             4, 16, 26, 16, 4,
                             1, 4, 7, 4, 1};
     cv::Mat kernel = cv::Mat(5, 5, CV_32F, gauss_data);
+    double sum = cv::sum(kernel)[0];
 
     // apply filter
     cv::Mat result;
-    cv::filter2D(img, result, -1, kernel, cv::Point(-1, -1), 0, cv::BORDER_DEFAULT);
+    cv::filter2D(img, result, -1, kernel / sum, cv::Point(-1, -1), 0, cv::BORDER_DEFAULT);
 
     // show result
     string windowName = "Gaussian Blurring";
