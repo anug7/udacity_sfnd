@@ -3,7 +3,6 @@
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
-#include <opencv2/features2d.hpp>
 #include <opencv2/xfeatures2d.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
 
@@ -44,6 +43,21 @@ void descKeypoints1()
     // time for both steps and compare both BRISK and SIFT
     // with regard to processing speed and the number and 
     // visual appearance of keypoints.
+    cv::Ptr<cv::DescriptorExtractor> descriptorSift = cv::xfeatures2d::SIFT::create();
+    cv::Mat descSIFT;
+    vector<cv::KeyPoint> kptsSIFT;
+    t = (double)cv::getTickCount();
+    descriptorSift->compute(imgGray, kptsSIFT, descSIFT);
+    t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+    cout << "SIFT descriptor in " << 1000 * t / 1.0 << " ms" << endl;
+
+    // visualize results
+    visImage = img.clone();
+    cv::drawKeypoints(img, kptsSIFT, visImage, cv::Scalar::all(-1), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+    string windowNameSift = "SIFT Results";
+    cv::namedWindow(windowNameSift, 1);
+    imshow(windowName, visImage);
+    cv::waitKey(0);
 
 }
 
