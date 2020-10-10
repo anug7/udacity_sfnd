@@ -33,6 +33,7 @@ void matchDescriptors(cv::Mat &imgSource, cv::Mat &imgRef, vector<cv::KeyPoint> 
         }
 
         //... TODO : implement FLANN matching
+        matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
         cout << "FLANN matching";
     }
 
@@ -48,9 +49,20 @@ void matchDescriptors(cv::Mat &imgSource, cv::Mat &imgRef, vector<cv::KeyPoint> 
     else if (selectorType.compare("SEL_KNN") == 0)
     { // k nearest neighbors (k=2)
 
-        // TODO : implement k-nearest-neighbor matching
+        std::vector <std::vector<cv::DMatch> > raw_matches;
+        double t = (double)cv::getTickCount();
+        matcher->knnMatch(descSource, descRef, raw_matches, 2);
+        t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+        cout << " (KNN) with n=" << raw_matches.size() << " matches in " << 1000 * t / 1.0 << " ms" << endl;
 
-        // TODO : filter matches using descriptor distance ratio test
+        const float ratio_thresh = 0.8f;
+        for (size_t i = 0; i < raw_matches.size(); i++)
+        {
+                if (raw_matches[i][0].distance < ratio_thresh * raw_matches[i][1].distance)
+                {
+                        matches.push_back(raw_matches[i][0]);
+                }
+        }
     }
 
     // visualize results
@@ -70,16 +82,18 @@ int main()
     cv::Mat imgRef = cv::imread("../images/img2gray.png");
 
     vector<cv::KeyPoint> kptsSource, kptsRef; 
-    readKeypoints("../dat/C35A5_KptsSource_BRISK_large.dat", kptsSource);
-    readKeypoints("../dat/C35A5_KptsRef_BRISK_large.dat", kptsRef);
+    readKeypoints("../dat/C35A5_KptsSource_SIFT.dat", kptsSource);
+    readKeypoints("../dat/C35A5_KptsRef_SIFT.dat", kptsRef);
 
     cv::Mat descSource, descRef; 
-    readDescriptors("../dat/C35A5_DescSource_BRISK_large.dat", descSource);
-    readDescriptors("../dat/C35A5_DescRef_BRISK_large.dat", descRef);
+    readDescriptors("../dat/C35A5_DescSource_SIFT.dat", descSource);
+    readDescriptors("../dat/C35A5_DescRef_SIFT.dat", descRef);
 
     vector<cv::DMatch> matches;
-    string matcherType = "MAT_BF"; 
+    //string matcherType = "MAT_BF"; 
+    string matcherType = "MAT_FLANN"; 
     string descriptorType = "DES_BINARY"; 
-    string selectorType = "SEL_NN"; 
+    //string selectorType = "SEL_NN"; 
+    string selectorType = "SEL_KNN"; 
     matchDescriptors(imgSource, imgRef, kptsSource, kptsRef, descSource, descRef, matches, descriptorType, matcherType, selectorType);
 }
