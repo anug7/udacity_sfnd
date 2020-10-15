@@ -74,7 +74,7 @@ int main(int argc, const char *argv[])
 
         // extract 2D keypoints from current image
         vector<cv::KeyPoint> keypoints; // create empty feature list for current image
-        string detectorType = "SIFT"; //SHITOMASI, BRISK, HARRIS, ORB, AKAZE, SIFT, FAST
+        string detectorType = "AKAZE"; //SHITOMASI, BRISK, HARRIS, ORB, AKAZE, SIFT, FAST
         string descriptorType = "SIFT"; // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
 
         //// STUDENT ASSIGNMENT
@@ -126,7 +126,7 @@ int main(int argc, const char *argv[])
 
         // push keypoints and descriptor for current frame to end of data buffer
         (dataBuffer.end() - 1)->keypoints = keypoints;
-        cout << "#2 : DETECT KEYPOINTS done" << endl;
+        cout << "#2 : DETECT KEYPOINTS done " << endl;
 
         /* EXTRACT KEYPOINT DESCRIPTORS */
 

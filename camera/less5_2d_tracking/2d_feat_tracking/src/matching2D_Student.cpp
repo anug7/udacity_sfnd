@@ -15,17 +15,19 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
 
     if (matcherType.compare("MAT_BF") == 0)
     {
-        int normType = cv::NORM_HAMMING;
+        int normType = cv::NORM_L1;
+        //int normType = cv::NORM_HAMMING;
         matcher = cv::BFMatcher::create(normType, crossCheck);
     }
     else if (matcherType.compare("MAT_FLANN") == 0)
     {
-        if (descSource.type() != CV_32F)
+        matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
+        if (descSource.type() != CV_32F || descSource.type() != CV_8U 
+            || descSource.type() != CV_32S)
         { // OpenCV bug workaround : convert binary descriptors to floating point due to a bug in current OpenCV implementation
             descSource.convertTo(descSource, CV_32F);
             descRef.convertTo(descRef, CV_32F);
         }
-        matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
     }
 
     // perform matching task
@@ -90,6 +92,9 @@ void descKeypoints(vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &descr
         extractor = cv::AKAZE::create();
     }else if(descriptorType.compare("BRIEF") == 0){
         extractor = cv::xfeatures2d::BriefDescriptorExtractor::create();
+    }else{
+        std::cout << "Invalid descriptor selection..\n";
+        exit(-1);
     }
 
     // perform feature description
