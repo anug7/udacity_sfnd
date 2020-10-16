@@ -32,3 +32,10 @@ See the classroom instruction and code comments for more details on each of thes
 2. Make a build directory in the top level directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
 4. Run it: `./2D_feature_tracking`.
+
+Results:
+1. Detailed results can be found in the "results/feature_comparison.xlsx" or "results/feature_comparison.pdf" file
+2. Run time of each feature detector depends on the number of feature it could detect in the scene.
+3. Some feature detector works well with some feature detector i.e AKAZE with its own detector & extractor
+4. Binary descriptor needs HUMMING distance while Gradient based descriptor needs L1 or L2 Norm.
+
