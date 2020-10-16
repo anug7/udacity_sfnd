@@ -75,21 +75,30 @@ void descKeypoints(vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &descr
     }
     else if(descriptorType.compare("SIFT") == 0)
     {
-        double hessianThreshold=100;
-        int nOctaves = 4;
-        int nOctaveLayers = 3;
-        bool extended = false;
-        extractor = cv::xfeatures2d::SIFT::create(hessianThreshold,
-                                                  nOctaves, nOctaveLayers);
+        int nfeatures = 0, nOctaveLayers = 4;
+        double contrastThreshold = 0.040000000000000001,
+               edgeThreshold = 10, sigma = 1.6000000000000001;
+        extractor = cv::xfeatures2d::SIFT::create(nfeatures, nOctaveLayers, 
+                                                  contrastThreshold,
+                                                  edgeThreshold,
+                                                  sigma);
     }
     else if(descriptorType.compare("ORB") == 0){
-        extractor = cv::ORB::create();
+        extractor = cv::ORB::create(cv::ORB::FAST_SCORE);
     }
     else if(descriptorType.compare("FREAK") == 0){
         extractor = cv::xfeatures2d::FREAK::create();
     }
     else if(descriptorType.compare("AKAZE") == 0){
-        extractor = cv::AKAZE::create();
+        cv::AKAZE::DescriptorType descriptor_type = cv::AKAZE::DESCRIPTOR_MLDB;
+        int descriptor_size = 0, descriptor_channels = 3;
+        float threshold = 0.00100000005F;
+        int nOctaves = 4;
+        int nOctaveLayers = 4;
+        cv::KAZE::DiffusivityType diffusivity = cv::KAZE::DIFF_PM_G2;
+        extractor = cv::AKAZE::create(descriptor_type, descriptor_size,
+                                      descriptor_channels, threshold,
+                                      nOctaves, nOctaveLayers, diffusivity);
     }else if(descriptorType.compare("BRIEF") == 0){
         extractor = cv::xfeatures2d::BriefDescriptorExtractor::create();
     }else{
@@ -128,6 +137,7 @@ void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool b
         cv::KeyPoint newKeyPoint;
         newKeyPoint.pt = cv::Point2f((*it).x, (*it).y);
         newKeyPoint.size = blockSize;
+        newKeyPoint.class_id = it - corners.begin();
         keypoints.push_back(newKeyPoint);
     }
     t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
@@ -204,9 +214,22 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
    }else if(detectorType.compare("ORB") == 0){
      detector = cv::ORB::create();
    }else if (detectorType.compare("AKAZE") == 0){
-     detector = cv::AKAZE::create();
+     cv::AKAZE::DescriptorType descriptor_type = cv::AKAZE::DESCRIPTOR_MLDB;
+     int descriptor_size = 0, descriptor_channels = 3;
+     float threshold = 0.00100000005F;
+     int nOctaves = 4;
+     int nOctaveLayers = 4;
+     cv::KAZE::DiffusivityType diffusivity = cv::KAZE::DIFF_PM_G2;
+     detector = cv::AKAZE::create(descriptor_type, descriptor_size,
+                                  descriptor_channels, threshold,
+                                  nOctaves, nOctaveLayers, diffusivity);
    }else if(detectorType.compare("SIFT") == 0){
-     detector = cv::xfeatures2d::SIFT::create();
+     int nfeatures = 0, nOctaveLayers = 4;
+     double contrastThreshold = 0.040000000000000001,
+            edgeThreshold = 10, sigma = 1.6000000000000001;
+     detector = cv::xfeatures2d::SIFT::create(nfeatures, nOctaveLayers,
+                                              contrastThreshold,
+                                              edgeThreshold, sigma);
    }
    double t = (double)cv::getTickCount();
    detector->detect(img, keypoints);

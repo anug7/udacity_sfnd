@@ -39,3 +39,18 @@ Results:
 3. Some feature detector works well with some feature detector i.e AKAZE with its own detector & extractor
 4. Binary descriptor needs HUMMING distance while Gradient based descriptor needs L1 or L2 Norm.
 
+Rubrics points:
+MP1. DataBUffer is implemented with vector and std::rotate options
+MP2. Keypoint detection is implemented by going through the OpenCV
+documentaionand using default parameters.
+MP3. Used Contains function in Rect class to remove points outside front vehicle
+MP4. Descriptors are implemented with OpenCV documentation and using defualt
+values. For some combination for detector & descriptor, keypoints has to be
+filtered 
+MP5. KNN is used and best point is selected via distance ratio
+
+Others
+1. SIFT encodes octave & layer information in the same variables.. This has to
+be decoded for some descriptor like ORB to work
+2. Could find corresponding parameter needed to make other detector work with
+AKAZE descriptor

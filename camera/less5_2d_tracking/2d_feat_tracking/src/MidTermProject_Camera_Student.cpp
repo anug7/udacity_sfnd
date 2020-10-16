@@ -74,8 +74,8 @@ int main(int argc, const char *argv[])
 
         // extract 2D keypoints from current image
         vector<cv::KeyPoint> keypoints; // create empty feature list for current image
-        string detectorType = "AKAZE"; //SHITOMASI, BRISK, HARRIS, ORB, AKAZE, SIFT, FAST
-        string descriptorType = "SIFT"; // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
+        string detectorType = "ORB"; //SHITOMASI, BRISK, HARRIS, ORB, AKAZE, SIFT, FAST
+        string descriptorType = "BRISK"; // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
 
         //// STUDENT ASSIGNMENT
         //// TASK MP.2 -> add the following keypoint detectors in file matching2D.cpp and enable string-based selection based on detectorType
@@ -96,12 +96,20 @@ int main(int argc, const char *argv[])
 
         // only keep keypoints on the preceding vehicle
         bool bFocusOnVehicle = true;
+        int i = 0;
         cv::Rect vehicleRect(535, 180, 180, 150);
         if (bFocusOnVehicle)
         {
             vector<cv::KeyPoint> tmp;
             for (cv::KeyPoint kp: keypoints){
               if(vehicleRect.contains(kp.pt)){
+                //For SIFT, remove decode the level value from encoded octave
+                //variable..Refer: https://stackoverflow.com/questions/16186361/strange-octave-value-in-sift-algorithm
+                //Refer: https://github.com/opencv/opencv/issues/4554
+                if (descriptorType.compare("ORB") == 0 &&
+                    detectorType.compare("SIFT") == 0){
+                  kp.octave = kp.octave && 0xFF;
+                }
                 tmp.push_back(kp);
               }
             }
