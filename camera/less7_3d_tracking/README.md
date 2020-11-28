@@ -50,4 +50,4 @@ Code is implemented for Keypoint correspondence and used distance matric from DM
 Code is implemented based on lesson 3. Handles outliers to some level by computing mean rejection.
 
 **FP.5 Performance Evaluation 1**
-Lidar TTC off examples
+There are cases where the TTC lidar is off from the actual. This is because of the method used to compute the x min which can be influenced by lot of points present curvy regions not accounting to the actual min point to the car.
