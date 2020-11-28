@@ -1,5 +1,6 @@
 
 /* INCLUDES FOR THIS PROJECT */
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -91,7 +92,12 @@ int main(int argc, const char *argv[])
         // push image into data frame buffer
         DataFrame frame;
         frame.cameraImg = img;
-        dataBuffer.push_back(frame);
+        if (dataBuffer.size() > dataBufferSize){
+            std::rotate(dataBuffer.begin(), dataBuffer.begin() + 1, dataBuffer.end());
+           *(dataBuffer.end() - 1) = frame;
+        }else{
+            dataBuffer.push_back(frame);
+        }
 
         cout << "#1 : LOAD IMAGE INTO BUFFER done" << endl;
 
@@ -132,7 +138,7 @@ int main(int argc, const char *argv[])
         bVis = true;
         if(bVis)
         {
-            show3DObjects((dataBuffer.end()-1)->boundingBoxes, cv::Size(4.0, 20.0), cv::Size(2000, 2000), true);
+            show3DObjects((dataBuffer.end()-1)->boundingBoxes, cv::Size(4.0, 20.0), cv::Size(1280, 720), true);
         }
         bVis = false;
 
@@ -140,7 +146,7 @@ int main(int argc, const char *argv[])
         
         
         // REMOVE THIS LINE BEFORE PROCEEDING WITH THE FINAL PROJECT
-        continue; // skips directly to the next image without processing what comes beneath
+        //continue; // skips directly to the next image without processing what comes beneath
 
         /* DETECT IMAGE KEYPOINTS */
 
@@ -155,10 +161,10 @@ int main(int argc, const char *argv[])
         if (detectorType.compare("SHITOMASI") == 0)
         {
             detKeypointsShiTomasi(keypoints, imgGray, false);
-        }
-        else
-        {
-            //...
+        }else if (detectorType.compare("HARRIS") == 0){
+            detKeypointsHarris(keypoints, imgGray, false);
+        }else{
+            detKeypointsModern(keypoints, imgGray, detectorType, false);
         }
 
         // optional : limit number of keypoints (helpful for debugging and learning)
@@ -216,7 +222,7 @@ int main(int argc, const char *argv[])
             /* TRACK 3D OBJECT BOUNDING BOXES */
 
             //// STUDENT ASSIGNMENT
-            //// TASK FP.1 -> match list of 3D objects (vector<BoundingBox>) between current and previous frame (implement ->matchBoundingBoxes)
+            //// TASK FP.1 -> match list of 3D objects (vector<//BoundingBox>) between current and previous frame (implement ->matchBoundingBoxes)
             map<int, int> bbBestMatches;
             matchBoundingBoxes(matches, bbBestMatches, *(dataBuffer.end()-2), *(dataBuffer.end()-1)); // associate bounding boxes between current and previous frame using keypoint matches
             //// EOF STUDENT ASSIGNMENT
@@ -257,6 +263,7 @@ int main(int argc, const char *argv[])
                     //// TASK FP.2 -> compute time-to-collision based on Lidar data (implement -> computeTTCLidar)
                     double ttcLidar; 
                     computeTTCLidar(prevBB->lidarPoints, currBB->lidarPoints, sensorFrameRate, ttcLidar);
+                    std::cout<< "TTC Lidar :" << ttcLidar << "\n";
                     //// EOF STUDENT ASSIGNMENT
 
                     //// STUDENT ASSIGNMENT
