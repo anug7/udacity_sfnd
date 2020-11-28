@@ -50,4 +50,10 @@ Code is implemented for Keypoint correspondence and used distance matric from DM
 Code is implemented based on lesson 3. Handles outliers to some level by computing mean rejection.
 
 **FP.5 Performance Evaluation 1**
-There are cases where the TTC lidar is off from the actual. This is because of the method used to compute the x min which can be influenced by lot of points present curvy regions not accounting to the actual min point to the car.
+There are cases where the TTC lidar is off from the actual. This is because of the method used to compute the x min which can be influenced by lot of points present on curvy regions and spread wider which are not accounting to the actual min point to the car.
+
+![img1](https://github.com/anug7/udacity_sfnd/blob/dev/camera/less7_3d_tracking/refs/ttc_off_lidar_1.png)
+![img2](https://github.com/anug7/udacity_sfnd/blob/dev/camera/less7_3d_tracking/refs/ttc_off_lidar_2.png)
+
+**FP.6 Performance Evaluation 2**
+Different KP and decriptors were evaluated for measuring the performance. It's mainly measured based on deviation from average and compared with the TTC of lidar. By that, it seems SIFT/SIFT is the good combination.
