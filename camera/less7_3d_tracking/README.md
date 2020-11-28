@@ -33,3 +33,23 @@ In this final project, you will implement the missing parts in the schematic. To
 2. Make a build directory in the top level project directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
 4. Run it: `./3D_object_tracking`.
+
+
+Review
+**FP.1 Match 3D Objects**
+Code is implemented for matching which returns bounding box with match candidate with the highest number of occurrences.
+
+**FP.2 Compute Lidar-based TTC**
+Code is implemented based on lesson 3. Handles outliers to some level by computing mean distance and rejection
+
+**FP.3 Associate Keypoint Correspondences with Bounding Boxes**
+Code is implemented for Keypoint correspondence and used distance matric from DMatches to reject outliers to some level. Can be improved further.
+
+**FP.4 Compute Camera-based TTC**
+Code is implemented based on lesson 3. Handles outliers to some level by computing mean rejection.
+
+**FP.5 Performance Evaluation 1**
+
+
+
+
