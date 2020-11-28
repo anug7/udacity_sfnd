@@ -36,6 +36,7 @@ In this final project, you will implement the missing parts in the schematic. To
 
 
 Review
+
 **FP.1 Match 3D Objects**
 Code is implemented for matching which returns bounding box with match candidate with the highest number of occurrences.
 
@@ -49,7 +50,4 @@ Code is implemented for Keypoint correspondence and used distance matric from DM
 Code is implemented based on lesson 3. Handles outliers to some level by computing mean rejection.
 
 **FP.5 Performance Evaluation 1**
-
-
-
-
+Lidar TTC off examples
