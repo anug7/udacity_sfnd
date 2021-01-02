@@ -216,6 +216,7 @@ There are cases where the TTC lidar is off from the actual. This is because of t
 ![img2](https://github.com/anug7/udacity_sfnd/blob/dev/camera/less7_3d_tracking/refs/ttc_off_lidar_2.png)
 
 **FP.6 Performance Evaluation 2**
-Different KP and decriptors were evaluated for measuring the performance in terms of quality of the results and the time. It's mainly measured based on deviation from average and compared with the TTC of lidar. By that, it seems SIFT/SIFT is the good combination. 
+Different KP and decriptors were evaluated for measuring the performance in terms of quality of the results and the time. It's mainly measured based on deviation from average and compared with the TTC of lidar. By that, it seems FAST/ORB is the good combination interms of time and quality of results.
 
 ![Results](https://github.com/anug7/udacity_sfnd/blob/dev/camera/less7_3d_tracking/images/perf.png)
+
