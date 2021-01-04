@@ -56,3 +56,62 @@ end
 Step 5:
 
 Compute 1d fft gives the range of the object.In our case, it's at 23m
+![Range estimation](https://github.com/anug7/udacity_sfnd/blob/dev/radar/images/range.png)
+
+Step 6:
+2nd FFT gives Range Vs doppler shit (veocity). Which is also called as RDM - Range Doppler Map
+
+![RDM](https://github.com/anug7/udacity_sfnd/blob/dev/radar/images/range_vel.png)
+
+Step 7: Clutter Removal
+As of Step 6, we could see more noise associated with the signal. This signal cannot be used for used for object detection, we need to remove noises called clutter. One way to remove that is using dynamic thresholding technique called Constan False Alarm Rate.
+
+Parameters to 2D CFAR:
+```
+%Select the number of Training Cells in both the dimensions.
+Tr = 10;
+Td = 8;
+
+% *%TODO* :
+%Select the number of Guard Cells in both dimensions around the Cell under 
+%test (CUT) for accurate estimation
+Gr = 4;
+Gd = 4;
+
+% *%TODO* :
+% offset the threshold by SNR value in dB
+offset = 1.4;
+```
+The implementation of the algorithm is as follows,
+```
+for i = Tr+Gr+1:(Nr/2)-(Tr+Gr)
+    for j = Td+Gd+1:(Nd)-(Td+Gd)
+        noise_level = 0;
+        %Iterate over grid around CUT
+        for p = i-(Tr+Gr) : i+(Tr+Gr)
+            for q = j-(Td+Gd) : j+(Td+Gd)
+                %ignore Guard cells
+                if (abs(i-p) > Gr || abs(j-q) > Gd)
+                    noise_level = noise_level + db2pow(RDM(p,q));
+                end
+            end
+        end
+        total_cells = (2*(Td+Gd+1)*2*(Tr+Gr+1)-(Gr*Gd)-1);
+        %compute threshold average and convert to power from db
+        threshold = pow2db(noise_level/total_cells);
+        threshold = threshold + offset;
+        %actual signal value of CUT
+        cell_value = RDM(i,j);  
+        if (cell_value < threshold)
+            RDM(i,j) = 0;
+        else
+            RDM(i,j) = 1;
+        end
+        
+    end
+end
+
+```
+Output of CFAR algorithm
+
+![CFAR](https://github.com/anug7/udacity_sfnd/blob/dev/radar/images/cfar.png)
