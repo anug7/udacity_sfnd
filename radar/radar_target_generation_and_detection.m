@@ -184,27 +184,24 @@ RDM = RDM/max(max(RDM)); % Normalizing
 
 for i = Tr+Gr+1:(Nr/2)-(Tr+Gr)
     for j = Td+Gd+1:(Nd)-(Td+Gd)
-        %Create a vector to store noise_level for each iteration on training cells
         noise_level = 0;
-        %Step through each of bins and the surroundings of the CUT
+        %Iterate over grid around CUT
         for p = i-(Tr+Gr) : i+(Tr+Gr)
             for q = j-(Td+Gd) : j+(Td+Gd)
-                %Exclude the Guard cells and CUT cells
+                %ignore Guard cells
                 if (abs(i-p) > Gr || abs(j-q) > Gd)
-                    %Convert db to power
                     noise_level = noise_level + db2pow(RDM(p,q));
                 end
             end
         end
         total_cells = (2*(Td+Gd+1)*2*(Tr+Gr+1)-(Gr*Gd)-1);
-        %Calculate threshould from noise average then add the offset
+        %compute threshold average and convert to power from db
         threshold = pow2db(noise_level/total_cells);
-        %Add the SNR to the threshold
         threshold = threshold + offset;
-        %Measure the signal in Cell Under Test(CUT) and compare against
-        CUT = RDM(i,j);
+        %actual signal value of CUT
+        cell_value = RDM(i,j);
         
-        if (CUT < threshold)
+        if (cell_value < threshold)
             RDM(i,j) = 0;
         else
             RDM(i,j) = 1;
@@ -213,16 +210,12 @@ for i = Tr+Gr+1:(Nr/2)-(Tr+Gr)
     end
 end
 
-
-
 % *%TODO* :
 % The process above will generate a thresholded block, which is smaller 
 %than the Range Doppler Map as the CUT cannot be located at the edges of
 %matrix. Hence,few cells will not be thresholded. To keep the map size same
 % set those values to 0. 
-
 RDM(RDM~=0 & RDM~=1) = 0;
-
 
 % *%TODO* :
 %display the CFAR output using the Surf function like we did for Range
