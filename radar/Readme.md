@@ -67,6 +67,8 @@ Step 7: Clutter Removal
 As of Step 6, we could see more noise associated with the signal. This signal cannot be used for used for object detection, we need to remove noises called clutter. One way to remove that is using dynamic thresholding technique called Constan False Alarm Rate.
 
 Parameters to 2D CFAR:
+* No of Training cells are selected based on amount of noise spreaing and thresholding. I have selected this based on empirical results
+* No of Guard cells are seleced based on CUT value leaking. I have selected the optimal value based on experiments.
 ```
 %Select the number of Training Cells in both the dimensions.
 Tr = 10;
@@ -77,12 +79,13 @@ Td = 8;
 %test (CUT) for accurate estimation
 Gr = 4;
 Gd = 4;
-
-% *%TODO* :
-% offset the threshold by SNR value in dB
-offset = 1.4;
 ```
+
 The implementation of the algorithm is as follows,
+* Iterate over the entire RDM and compute the 2D grid for each of the CUT
+* Sum up all the values of 2D grid present inside the Grid and ignore the Guard cells
+* Average the summed up value with total no. of cells *((2*(Td+Gd+1)*2*(Tr+Gr+1)-(Gr*Gd)-1))*
+* Use the computed threshold-ed value from above and use to threshold the CUT value
 ```
 for i = Tr+Gr+1:(Nr/2)-(Tr+Gr)
     for j = Td+Gd+1:(Nd)-(Td+Gd)
@@ -112,6 +115,13 @@ for i = Tr+Gr+1:(Nr/2)-(Tr+Gr)
 end
 
 ```
+Step 8:
+As the edge cells don't have complete 2D grid cells, they are set to zero. It's implemented as follows,
+
+```
+RDM(RDM~=0 & RDM~=1) = 0;
+```
+
 Output of CFAR algorithm
 
 ![CFAR](https://github.com/anug7/udacity_sfnd/blob/dev/radar/images/cfar.png)
